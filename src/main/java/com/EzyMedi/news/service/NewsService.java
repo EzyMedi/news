@@ -1,17 +1,17 @@
 package com.EzyMedi.news.service;
 
 import com.EzyMedi.news.dto.NewsMessage;
-import com.EzyMedi.news.dto.NewsReceiveDto;
+import com.EzyMedi.news.dto.NewsSendDto;
 import com.EzyMedi.news.model.News;
 import com.EzyMedi.news.producer.NewsMessageProducer;
 import com.EzyMedi.news.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.EzyMedi.user.data.model.User;
+
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,7 +30,7 @@ public class NewsService {
         System.out.println("News broadcasted to all");
     }
 
-    public ResponseEntity<String> createNews(UUID doctorId, NewsReceiveDto newsDto) {
+    public ResponseEntity<String> createNews(UUID doctorId, NewsSendDto newsDto) {
         News news = new News();
         news.setDoctorId(doctorId);
         news.setTitle(newsDto.getTitle());
@@ -43,20 +43,29 @@ public class NewsService {
         message.setTitle(news.getTitle());
         message.setDoctorId(news.getDoctorId());
         publish(message);
+     return ResponseEntity.ok("News post created ");
+    }
+    //single news
+    public News getNewsById(UUID id) {
+        return newsRepository.findById(id).orElse(null);
+    }
 
-//        String fullUrl = urlGetAllFollowers + "/" + doctorId;
-//        ResponseEntity<User[]> response = restTemplate.getForEntity(fullUrl, User[].class);
-//        User[] followers = response.getBody();
-//
-//        // Step 3: Notify each follower (e.g., print to console, or eventually send real notifications)
-//        if (followers != null) {
-//            for (User follower : followers) {
-//                // Example notification logic (replace with actual implementation, e.g., message queue, push notification)
-//                System.out.println("Notified follower: " + follower.getFullName() + " about new post: " + news.getTitle());
-//            }
-//        }
+    public List<News> getAllNews() {
+        return newsRepository.findAll();
+    }
 
-//        return ResponseEntity.ok("News post created and notifications sent to " + (followers != null ? followers.length : 0) + " followers.");
-        return ResponseEntity.ok("News post created ");
+    public News updateNews( UUID id, News news) {
+        News post = newsRepository.findById(id).orElse(null);
+        if (post != null) {
+            post.setTitle(news.getTitle());
+            post.setContent(news.getContent());
+            post.setUpdatedDate(new Date());
+            newsRepository.save(post);
+        }
+        return post;
+    }
+
+    public void deleteNews( UUID id) {
+        newsRepository.deleteById(id);
     }
 }

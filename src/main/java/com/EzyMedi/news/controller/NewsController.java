@@ -1,56 +1,48 @@
 package com.EzyMedi.news.controller;
 
+import com.EzyMedi.news.dto.NewsSendDto;
 import com.EzyMedi.news.model.News;
-import com.EzyMedi.news.repository.NewsRepository;
+import com.EzyMedi.news.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/news")
 public class NewsController {
     @Autowired
-    private NewsRepository newsRepository;
+    private NewsService newsService;
     @Autowired
     private RestTemplate restTemplate;
 
 
-    @PostMapping("/news")
-    News createNews(@RequestBody News news) {
-        news.setPublishedDate(new Date());
-        String message = "News created " + news.getTitle();
-        restTemplate.postForEntity("http://localhost:8080/patient/notify-all", message, String.class);
-        return newsRepository.save(news);
+    @PostMapping("/create")
+    ResponseEntity<String> createNews(@RequestBody NewsSendDto newsDto, @RequestParam UUID doctorId) {
+        return newsService.createNews(doctorId, newsDto);
     }
 
     //single news
-    @GetMapping("/news/{id}")
+    @GetMapping("/{id}/get")
     News getNewsById(@PathVariable UUID id) {
-        return newsRepository.findById(id).orElse(null);
+        return newsService.getNewsById(id);
     }
 
-    @GetMapping("/news")
+    @GetMapping("/get")
     List<News> getAllNews() {
-        return newsRepository.findAll();
+        return newsService.getAllNews();
     }
 
-    @PutMapping("news/{id}")
+    @PutMapping("/{id}/update")
     News updateNews(@PathVariable UUID id, @RequestBody News news) {
-        News post = newsRepository.findById(id).orElse(null);
-       if (post != null) {
-           post.setTitle(news.getTitle());
-           post.setContent(news.getContent());
-           post.setUpdatedDate(new Date());
-           newsRepository.save(post);
-       }
-       return post;
+        return newsService.updateNews(id, news);
     }
 
-    @DeleteMapping("news/{id}")
+    @DeleteMapping("/{id}/delete")
     void deleteNews(@PathVariable UUID id) {
-        newsRepository.deleteById(id);
+        newsService.deleteNews(id);
     }
 }

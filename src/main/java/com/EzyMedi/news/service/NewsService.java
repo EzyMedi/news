@@ -1,16 +1,16 @@
 package com.EzyMedi.news.service;
 
+import com.EzyMedi.news.dto.NewsMessage;
 import com.EzyMedi.news.dto.NewsReceiveDto;
 import com.EzyMedi.news.model.News;
+import com.EzyMedi.news.producer.NewsMessageProducer;
 import com.EzyMedi.news.repository.NewsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.EzyMedi.user.data.dto.DoctorDTO;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-
+import com.EzyMedi.user.data.model.User;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,28 +20,43 @@ public class NewsService {
     private NewsRepository newsRepository;
     @Autowired
     private RestTemplate restTemplate;
-    @Value("${api.notify.all.base-url}")
-    String urlNotifyAll;
-    @Value("${api.get.doctor.base-url}")
-    String urlGetDoctor;
+//    @Value("${api.get.all.followers.url}")
+//    String urlGetAllFollowers;
+    @Autowired
+    private NewsMessageProducer newsMessageProducer;
+
+    public void publish(NewsMessage message) {
+        newsMessageProducer.sendNewsMessage(message);
+        System.out.println("News broadcasted to all");
+    }
+
     public ResponseEntity<String> createNews(UUID doctorId, NewsReceiveDto newsDto) {
-        DoctorDTO doctorCheck;
-        try {
-            doctorCheck = restTemplate.getForObject(urlGetDoctor + doctorId, DoctorDTO.class);
-        } catch (RestClientException e) {
-            throw new RuntimeException("Failed to fetch customer with id: " + doctorId, e);
-        }
-        // Step 2: Create and save news post
         News news = new News();
-        news.setAuthorId(doctorId);
+        news.setDoctorId(doctorId);
         news.setTitle(newsDto.getTitle());
         news.setContent(newsDto.getContent());
         news.setPublishedDate(new Date());
         newsRepository.save(news);
 
+        NewsMessage message = new NewsMessage();
+        message.setNewsId(news.getPostId());
+        message.setTitle(news.getTitle());
+        message.setDoctorId(news.getDoctorId());
+        publish(message);
 
+//        String fullUrl = urlGetAllFollowers + "/" + doctorId;
+//        ResponseEntity<User[]> response = restTemplate.getForEntity(fullUrl, User[].class);
+//        User[] followers = response.getBody();
+//
+//        // Step 3: Notify each follower (e.g., print to console, or eventually send real notifications)
+//        if (followers != null) {
+//            for (User follower : followers) {
+//                // Example notification logic (replace with actual implementation, e.g., message queue, push notification)
+//                System.out.println("Notified follower: " + follower.getFullName() + " about new post: " + news.getTitle());
+//            }
+//        }
 
-        return ResponseEntity.ok("News post created and notifications sent.");
+//        return ResponseEntity.ok("News post created and notifications sent to " + (followers != null ? followers.length : 0) + " followers.");
+        return ResponseEntity.ok("News post created ");
     }
-
 }

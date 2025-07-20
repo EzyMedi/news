@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "news")
 public class News {
     @GeneratedValue
     @Id
@@ -18,7 +17,7 @@ public class News {
     @Column
     private String content;
     @Column
-    private UUID authorId;
+    private UUID doctorId;
     @Column
     private Date publishedDate;
     @Column

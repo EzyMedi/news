@@ -17,6 +17,7 @@ public class NewsController {
     @Autowired
     private RestTemplate restTemplate;
 
+
     @PostMapping("/news")
     News createNews(@RequestBody News news) {
         news.setPublishedDate(new Date());

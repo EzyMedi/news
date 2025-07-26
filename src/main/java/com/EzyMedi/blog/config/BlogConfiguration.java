@@ -1,4 +1,4 @@
-package com.EzyMedi.news.config;
+package com.EzyMedi.blog.config;
 
 import lombok.Getter;
 import org.springframework.amqp.core.FanoutExchange;
@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Getter
 @Configuration
-public class NewsConfiguration {
-    @Value("${spring.rabbitmq.exchange.news}")
-    private String newsExchange;
+public class BlogConfiguration {
+    @Value("${spring.rabbitmq.exchange.blog}")
+    private String blogExchange;
 
     @Bean
     public FanoutExchange fanoutExchange() {
-        return new FanoutExchange(newsExchange);
+        return new FanoutExchange(blogExchange);
     }
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {

@@ -1,14 +1,19 @@
-package com.EzyMedi.news.model;
+package com.EzyMedi.blog.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Data
-public class News {
+public class Blog implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @GeneratedValue
     @Id
     private UUID postId;

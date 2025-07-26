@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.EzyMedi</groupId>
-	<artifactId>news</artifactId>
+	<artifactId>blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>news</name>
-	<description>News service for EzyMedi</description>
+	<name>blog</name>
+	<description>Blog service for EzyMedi</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -63,6 +63,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 	</dependencies>
 

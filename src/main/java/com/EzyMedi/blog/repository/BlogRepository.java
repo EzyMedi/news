@@ -1,10 +1,10 @@
-package com.EzyMedi.news.repository;
+package com.EzyMedi.blog.repository;
 
-import com.EzyMedi.news.model.News;
+import com.EzyMedi.blog.model.Blog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 @Repository
-public interface NewsRepository extends JpaRepository<News, UUID> {
+public interface BlogRepository extends JpaRepository<Blog, UUID> {
 }

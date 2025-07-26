@@ -1,10 +1,10 @@
-package com.EzyMedi.news;
+package com.EzyMedi.blog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NewsApplicationTests {
+class BlogApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,9 +1,9 @@
-package com.EzyMedi.news.dto;
+package com.EzyMedi.blog.dto;
 
 import lombok.Data;
 
 @Data
-public class NewsSendDto {
+public class BlogSendDto {
     private String title;
     private String content;
 }
